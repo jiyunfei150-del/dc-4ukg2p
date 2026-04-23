@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>双轮飞轮 · 自进化引擎</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'PingFang SC', 'Helvetica Neue', sans-serif;
+    background: linear-gradient(135deg, #050505, #0d1117, #0f172a);
+    min-height: 100vh;
+    padding: 40px 20px;
+    color: #fff;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 44px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #34d399, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .header p { color: rgba(255,255,255,0.4); font-size: 14px; }
+
+  .flywheels {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .flywheel {
+    border-radius: 20px;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .flywheel::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    opacity: 0.06;
+  }
+  .fw1 {
+    background: linear-gradient(135deg, rgba(52,211,153,0.1), rgba(16,185,129,0.05));
+    border: 1px solid rgba(52,211,153,0.3);
+  }
+  .fw1::before { background: #34d399; }
+  .fw2 {
+    background: linear-gradient(135deg, rgba(96,165,250,0.1), rgba(59,130,246,0.05));
+    border: 1px solid rgba(96,165,250,0.3);
+  }
+  .fw2::before { background: #60a5fa; }
+
+  .fw-icon { font-size: 32px; margin-bottom: 10px; }
+  .fw-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .fw-sub { font-size: 12px; color: rgba(255,255,255,0.35); margin-bottom: 20px; }
+  .fw1 .fw-title { color: #34d399; }
+  .fw2 .fw-title { color: #60a5fa; }
+
+  .cycle {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .cycle-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    position: relative;
+  }
+  .cycle-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  .fw1 .cycle-num { background: rgba(52,211,153,0.2); color: #34d399; border: 1px solid rgba(52,211,153,0.4); }
+  .fw2 .cycle-num { background: rgba(96,165,250,0.2); color: #60a5fa; border: 1px solid rgba(96,165,250,0.4); }
+
+  .cycle-arrow {
+    text-align: center;
+    color: rgba(255,255,255,0.15);
+    font-size: 16px;
+    padding: 3px 0;
+    line-height: 1;
+  }
+
+  .fw-output {
+    margin-top: 16px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .fw1 .fw-output { background: rgba(52,211,153,0.12); border: 1px solid rgba(52,211,153,0.3); color: #34d399; }
+  .fw2 .fw-output { background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.3); color: #60a5fa; }
+
+  /* Center connector */
+  .connector {
+    max-width: 900px;
+    margin: 24px auto 0;
+    padding: 20px 28px;
+    background: linear-gradient(135deg, rgba(167,139,250,0.1), rgba(236,72,153,0.07));
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 16px;
+    text-align: center;
+  }
+  .connector .icon { font-size: 24px; margin-bottom: 8px; }
+  .connector h3 { font-size: 15px; color: #c4b5fd; font-weight: 700; margin-bottom: 6px; }
+  .connector p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+  .connector p strong { color: rgba(255,255,255,0.7); }
+
+  .footer { text-align: center; margin-top: 36px; color: rgba(255,255,255,0.2); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>双轮飞轮 · 自进化引擎</h1>
+  <p>Dual Flywheel — 自进化不是"记住更多"，而是"变得更聪明"</p>
+</div>
+
+<div class="flywheels">
+  <!-- Flywheel 1: Memory Data -->
+  <div class="flywheel fw1">
+    <div class="fw-icon">🔄</div>
+    <div class="fw-title">记忆数据飞轮</div>
+    <div class="fw-sub">Memory Data Flywheel</div>
+    <div class="cycle">
+      <div class="cycle-item"><span class="cycle-num">1</span>生成（Generation）</div>
+      <div class="cycle-arrow">↓</div>
+      <div class="cycle-item"><span class="cycle-num">2</span>检索（Retrieval）</div>
+      <div class="cycle-arrow">↓</div>
+      <div class="cycle-item"><span class="cycle-num">3</span>整理（Management）</div>
+      <div class="cycle-arrow">↓</div>
+      <div class="cycle-item"><span class="cycle-num">4</span>反思（Reflection）</div>
+    </div>
+    <div class="fw-output">→ 高质量记忆资产</div>
+  </div>
+
+  <!-- Flywheel 2: Strategy -->
+  <div class="flywheel fw2">
+    <div class="fw-icon">⚙️</div>
+    <div class="fw-title">策略数据飞轮</div>
+    <div class="fw-sub">Strategy Data Flywheel</div>
+    <div class="cycle">
+      <div class="cycle-item"><span class="cycle-num">1</span>生成策略（Gen Strategy）</div>
+      <div class="cycle-arrow">↓</div>
+      <div class="cycle-item"><span class="cycle-num">2</span>检索策略（Ret Strategy）</div>
+      <div class="cycle-arrow">↓</div>
+      <div class="cycle-item"><span class="cycle-num">3</span>整理策略（Mgmt Strategy）</div>
+      <div class="cycle-arrow">↓</div>
+      <div class="cycle-item"><span class="cycle-num">4</span>策略优化（Optimization）</div>
+    </div>
+    <div class="fw-output">→ 持续优化能力</div>
+  </div>
+</div>
+
+<div class="connector">
+  <div class="icon">🧩</div>
+  <h3>两轮互为数据基础，共同驱动自进化</h3>
+  <p>
+    <strong>高质量记忆资产</strong> 为策略优化提供数据基础<br>
+    <strong>更好的策略</strong> 反过来提升记忆生成与检索质量<br>
+    每一轮循环，都让下一轮表现更好
+  </p>
+</div>
+
+<div class="footer">Generated by 小D · DataClaw</div>
+</body>
+</html>
